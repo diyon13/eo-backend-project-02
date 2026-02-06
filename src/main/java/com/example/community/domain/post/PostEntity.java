@@ -31,7 +31,7 @@ public class PostEntity {
     @Column(name = "board_id", nullable = false)
     private Long boardId;
 
-    @Column(name = "title", length = 100, nullable = false)
+    @Column(name = "post_title", length = 100, nullable = false)
     private String title;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
