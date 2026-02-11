@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 게시글 상세보기 기능 초기화
     initPostDetail();
 
+    // 사이드바 클릭 영역 확장
+    initSidebarLinkClick();
 });
 
 /**
@@ -168,3 +170,35 @@ function goBackToList() {
         initPostDetail();
     }
 }
+
+/**
+ * 사이드바에서 빈 공간 클릭해도 게시판으로 이동
+ */
+
+function initSidebarLinkClick() {
+    const items = document.querySelectorAll('.sidebar-menu > li');
+
+    items.forEach(li => {
+        const link = li.querySelector('a');
+        if (!link) return;
+
+        li.addEventListener('click', function (e) {
+            // ... 버튼(게시판 관리) 클릭이면 이동 금지
+            if (e.target.closest('.board-manage-btn')) return;
+
+            // 공지/게시판 추가 + 버튼 클릭이면 이동 금지
+            if (e.target.closest('.add-board-btn')) return;
+
+            // li 클릭 시 a 링크로 이동
+            window.location.href = link.href;
+        });
+    });
+}
+
+// 팝업창
+function openBoardPopup(url) {
+    window.open(url, "boardWrite",
+        "width=520, height=360, top=200, left=400, resizable=no, scrollbars=no"
+    );
+}
+
