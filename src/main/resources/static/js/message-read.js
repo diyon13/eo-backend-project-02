@@ -1,5 +1,5 @@
 /**
- * [2026-02-12] 쪽지 상세 조회 및 삭제 분기 로직
+ * 쪽지 상세 조회 및 삭제 분기 로직
  */
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -50,6 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         location.href = `/messages/write?target=${encodeURIComponent(data.senderNickname)}`;
                     };
                 }
+            }
+
+            // 상세조회 성공 시 공통 배지 업데이트 호출 (읽음 처리 반영)
+            if (window.MessageCommon) {
+                MessageCommon.updateUnreadBadge();
             }
         })
         .catch(err => {

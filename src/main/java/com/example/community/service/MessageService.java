@@ -36,4 +36,9 @@ public interface MessageService {
      * 쪽지 영구 삭제 (양측 모두 삭제 시 물리 삭제)
      */
     void permanentDelete(Long id, String username, String userType);
+
+    /**
+     * 읽지 않은 받은 쪽지 개수 조회
+     */
+    long getUnreadCount(String username);
 }

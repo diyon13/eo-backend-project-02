@@ -1,5 +1,5 @@
 /**
- * [2026-02-12] 쪽지 목록 기능 스크립트
+ * 쪽지 목록 기능 스크립트
  * - 목록 선택, 상세보기 이동, 대량 삭제(일반/영구) 처리
  */
 document.addEventListener('DOMContentLoaded', function() {
