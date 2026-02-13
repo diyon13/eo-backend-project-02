@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +85,19 @@ public class MessageController {
     /* --- API (JSON Response) --- */
 
     /**
+     * 읽지 않은 쪽지 총 개수 조회 API
+     * JS의 fetch('/messages/api/unread-count') 요청을 처리
+     */
+    @GetMapping("/api/unread-count")
+    @ResponseBody
+    public ResponseEntity<Long> getUnreadCount() {
+        String username = getCurrentUsername();
+        if (username == null) return ResponseEntity.ok(0L);
+
+        return ResponseEntity.ok(messageService.getUnreadCount(username));
+    }
+
+    /**
      * 상세 정보 조회 API
      */
     @GetMapping("/api/read")
@@ -150,7 +162,6 @@ public class MessageController {
         String username = getCurrentUsername();
         List<Long> ids = request.get("ids");
         if (ids != null) {
-            // 대량 삭제 시에도 서비스 로직 호출
             ids.forEach(id -> messageService.moveToTrash(id, username, "received"));
         }
         return ResponseEntity.ok().build();
@@ -165,7 +176,6 @@ public class MessageController {
         String username = getCurrentUsername();
         List<Long> ids = request.get("ids");
         if (ids != null) {
-            // 대량 영구 삭제 시에도 서비스 로직 호출
             ids.forEach(id -> messageService.permanentDelete(id, username, "received"));
         }
         return ResponseEntity.ok().build();

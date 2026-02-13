@@ -153,4 +153,18 @@ public class MessageServiceImpl implements MessageService {
             messageRepository.delete(message);
         }
     }
+
+    /**
+     * 읽지 않은 받은 쪽지 개수 조회
+     * - receiver: 본인
+     * - isRead: 0 (안읽음)
+     * - receiverDeleteState: 0 (휴지통이나 삭제되지 않은 정상 상태)
+     */
+    @Override
+    public long getUnreadCount(String username) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        return messageRepository.countByReceiverAndIsReadAndReceiverDeleteState(user, 0, 0);
+    }
 }

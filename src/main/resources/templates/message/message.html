@@ -5,6 +5,7 @@
     <title>쪽지함 - 커뮤니티</title>
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/message.css">
+    <script src="/js/message-com.js"></script>
     <script src="/js/message.js"></script>
 </head>
 <body class="popupBody">
@@ -14,7 +15,10 @@
         <h1 th:text="${#authentication.name} + '의 쪽지함'">사용자</h1>
         <ul>
             <li><a th:href="@{/messages/all}" class="menuItem" th:classappend="${currentType == 'all'} ? 'active'">전체 쪽지함</a></li>
-            <li><a th:href="@{/messages/received}" class="menuItem" th:classappend="${currentType == 'received'} ? 'active'">받은 쪽지함</a></li>
+            <li><a th:href="@{/messages/received}" class="menuItem" th:classappend="${currentType == 'received'} ? 'active'">
+                받은 쪽지함
+                <span id="unreadBadge">0</span>
+            </a></li>
             <li><a th:href="@{/messages/sent}" class="menuItem" th:classappend="${currentType == 'sent'} ? 'active'">보낸 쪽지함</a></li>
             <li><a th:href="@{/messages/write}" class="menuItem">쪽지쓰기</a></li>
             <li id="menuDivider"></li>
