@@ -2,8 +2,6 @@ package com.example.community.persistence;
 
 import com.example.community.domain.comment.CommentEntity;
 import com.example.community.domain.post.PostEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
