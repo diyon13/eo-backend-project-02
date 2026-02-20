@@ -174,16 +174,27 @@ public class PostController {
         return "post/read";
     }
 
+    // 게시글 수정 null 체크 추가!
     @PostMapping("/update")
     public String update(@PathVariable Long boardId, PostDto postDto, Criteria criteria,
                          RedirectAttributes redirectAttributes,
                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         log.info("update boardId={}, postDto={}", boardId, postDto);
 
+        // 인증 확인
+        if (userDetails == null) {
+            log.warn("UPDATE DENIED: userDetails is null");
+            redirectAttributes.addFlashAttribute("error", "로그인이 필요합니다.");
+            redirectAttributes.addAttribute("boardId", boardId);
+            return "redirect:/board/{boardId}/post/list";
+        }
+
         Long userId = userDetails.getId();
 
         if (postService.update(postDto, userId)) {
             redirectAttributes.addFlashAttribute("result", ResultDto.of(true, "update"));
+        } else {
+            redirectAttributes.addFlashAttribute("error", "게시글을 수정할 수 없습니다. (권한 없음)");
         }
 
         redirectAttributes.addAttribute("boardId", boardId);
@@ -207,16 +218,27 @@ public class PostController {
         return "post/write";
     }
 
+    // 게시글 삭제 null 체크
     @PostMapping("/delete")
     public String delete(@PathVariable Long boardId, @RequestParam Long id, Criteria criteria,
                          RedirectAttributes redirectAttributes,
                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         log.info("delete boardId={}, id={}", boardId, id);
 
+        // 인증 확인
+        if (userDetails == null) {
+            log.warn("DELETE DENIED: userDetails is null");
+            redirectAttributes.addFlashAttribute("error", "로그인이 필요합니다.");
+            redirectAttributes.addAttribute("boardId", boardId);
+            return "redirect:/board/{boardId}/post/list";
+        }
+
         Long userId = userDetails.getId();
 
         if (postService.delete(id, userId)) {
             redirectAttributes.addFlashAttribute("result", ResultDto.of(true, "delete"));
+        } else {
+            redirectAttributes.addFlashAttribute("error", "게시글을 삭제할 수 없습니다. (권한 없음)");
         }
 
         // 직접 URL 작성

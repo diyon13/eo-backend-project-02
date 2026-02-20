@@ -67,20 +67,17 @@ public class MainController {
         model.addAttribute("noticeBoardList", noticeBoardList);
         model.addAttribute("boardList", boardList);
 
-        // 3) '공지사항' 게시판의 게시글 최신 5개
-        Long noticeBoardId = noticeBoardList.stream()
-                .filter(b -> "공지사항".equals(b.getTitle()))
-                .findFirst()
-                .map(BoardDto::getId)
-                .orElse(null);
-
-        if (noticeBoardId != null) {
+        // 3) NOTICE 카테고리의 첫 번째 게시판 선택
+        if (!noticeBoardList.isEmpty()) {
+            Long noticeBoardId = noticeBoardList.get(0).getId();
             Pageable noticePageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
             var noticePage = postService.getList(noticeBoardId, noticePageable);
             model.addAttribute("noticeList", noticePage.getContent());
+            log.info("공지사항 로드 성공: boardId={}, title={}, postCount={}",
+                    noticeBoardId, noticeBoardList.get(0).getTitle(), noticePage.getContent().size());
         } else {
-            log.warn("'공지사항' 게시판이 없습니다. noticeBoardListTitles={}",
-                    noticeBoardList.stream().map(BoardDto::getTitle).toList());
+            log.warn("NOTICE 카테고리의 게시판이 없습니다. 모든 게시판 목록: {}",
+                    allBoards.stream().map(b -> b.getTitle() + "(" + b.getCategory() + ")").toList());
             model.addAttribute("noticeList", List.of());
         }
 
