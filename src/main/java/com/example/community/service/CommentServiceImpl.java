@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -87,9 +88,12 @@ public class CommentServiceImpl implements CommentService {
                 });
     }
 
-    // 댓글 수정
+    // 댓글 수정 - @Transactional 추가!
     @Override
+    @Transactional
     public Optional<CommentDto> update(CommentDto commentDto, Long userId) {
+        log.info("댓글 수정: commentId={}, userId={}", commentDto.getId(), userId);
+
         if (userId == null) return Optional.empty();
 
         // 오류라인한 주석처리
@@ -103,12 +107,14 @@ public class CommentServiceImpl implements CommentService {
                 .map(comment -> {
                     comment.updateContent(commentDto.getContent());
                     CommentEntity saved = commentRepository.save(comment);
+                    log.info("댓글 수정 완료: id={}", saved.getId());
                     return convertToDto(saved);
                 });
     }
 
-    // 댓글 삭제
+    // 댓글 삭제 - @Transactional 추가!
     @Override
+    @Transactional
     public boolean delete(Long id, Long userId) {
         if (userId == null) return false;
 
@@ -122,6 +128,7 @@ public class CommentServiceImpl implements CommentService {
                                 postRepository.save(post);
                             });
                     commentRepository.delete(comment);
+                    log.info("댓글 삭제 완료: id={}", id);
                     return true;
                 })
                 .orElse(false);
@@ -134,9 +141,11 @@ public class CommentServiceImpl implements CommentService {
                 .map(this::convertToDto);
     }
 
-    // 댓글 목록
+    // 댓글 목록 - @Transactional(readOnly = true) 추가!
     @Override
+    @Transactional(readOnly = true)
     public List<CommentDto> getList(Long postId) {
+        log.info("댓글 목록 조회: postId={}", postId);
         // 정렬 메서드 추가했으면 그걸로 바꿔도 됨
         return commentRepository.findByPostEntityId(postId).stream()
                 .map(this::convertToDto)
