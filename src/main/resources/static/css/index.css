@@ -430,7 +430,8 @@ body {
     font-size: 14px;
 }
 
-#auth-box > form > button  {
+/* 로그인 버튼만 파란색 (submit 버튼만 대상) */
+#auth-box > form > button[type="submit"] {
     width: 100%;
     padding: 10px;
     background-color: #667eea;
@@ -443,7 +444,7 @@ body {
     margin-bottom: 10px;
 }
 
-#auth-box > form > button:hover {
+#auth-box > form > button[type="submit"]:hover {
     background-color: #5568d3;
 }
 
@@ -463,7 +464,7 @@ body {
     color: #333;
 }
 
-/* 소셜 로그인 버튼 스타일  */
+/* 소셜 로그인 버튼은 라임 그린 */
 .btn-social-login {
     width: 100%;
     padding: 10px;
